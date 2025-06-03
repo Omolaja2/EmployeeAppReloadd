@@ -1,0 +1,12 @@
+
+@{
+    ViewData["Title"] = "Department Details";
+}
+<h2>@ViewData["Title"]</h2>
+
+<div class="card p-3 shadow-sm mt-4">
+    <h4>@Model.Name</h4>
+    <p><strong>Description:</strong> @Model.Description</p>
+    <p><strong>ID:</strong> @Model.Id</p>
+</div>
+<a asp-action="Index" class="btn btn-secondary mt-3">Back to Department List</a>
