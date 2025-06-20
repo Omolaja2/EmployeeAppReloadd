@@ -1,5 +1,6 @@
 using Data.Context;
 using Data.Model;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -7,6 +8,7 @@ using Presentation.Models;
 
 namespace Presentation.Controllers
 {
+
     public class EmployeeController : Controller
     {
         private readonly EmployeeAppDbContext _context;
@@ -94,13 +96,12 @@ namespace Presentation.Controllers
             if (employee == null)
                 return NotFound();
 
-            return View(employee); // You can map to a ViewModel if needed
+            return View(employee);
         }
 
-        [HttpGet]
-        public async Task<IActionResult> Edit(Guid id)
+        public async Task<IActionResult> Update(Guid id)
         {
-            var employee = await _context.Employees.FindAsync(id);
+            var employee = await _context.Employees.FirstOrDefaultAsync(c => c.Id == id);
             if (employee == null) return NotFound();
 
             var updateVm = new EditEmployeeViewModel
@@ -121,7 +122,7 @@ namespace Presentation.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Edit(EditEmployeeViewModel viewModel)
+        public async Task<IActionResult> Update(EditEmployeeViewModel viewModel)
         {
             if (!ModelState.IsValid)
             {

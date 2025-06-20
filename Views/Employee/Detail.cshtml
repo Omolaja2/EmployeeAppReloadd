@@ -1,11 +1,30 @@
+<h1>Employee Details</h1>
 
-<h1>Employee Detals </h1>
-<div>
-    <h3>@Model.FirstName</h3>
-    <h3>@Model.LastName</h3>
-    <h3>@Model.Email</h3>
-    <h3>@Model.Department</h3>
-     <h3>@Model.HireDate</h3>
-    <p><strong>Salary:$</strong>@Model.Salary</p>
-</div>
-<a asp-action="Index" class="btn btn-secondary">Back to Employee List</a>
+<table class="table table-bordered">
+    <tr>
+        <th>First Name</th>
+        <td>@Model.FirstName</td>
+    </tr>
+    <tr>
+        <th>Last Name</th>
+        <td>@Model.LastName</td>
+    </tr>
+    <tr>
+        <th>Email</th>
+        <td>@Model.Email</td>
+    </tr>
+    <tr>
+        <th>Department</th>
+        <td>@Model.Department</td>
+    </tr>
+    <tr>
+        <th>Hire Date</th>
+        <td>@Model.HireDate.ToString("yyyy-MM-dd")</td> 
+    </tr>
+    <tr>
+        <th>Salary</th>
+        <td>$@Model.Salary</td>
+    </tr>
+</table>
+
+<a asp-action="Index" class="btn btn-outline-primary btn-sm">Back to Employee List</a>

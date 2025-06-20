@@ -8,13 +8,13 @@ namespace Presentation.Models
         public Guid Id { get; set; }
 
         [Required]
-        public string FirstName { get; set; } = string.Empty;
+        public string FirstName { get; set; } = default!;
 
         [Required]
-        public string LastName { get; set; } = string.Empty;
+        public string LastName { get; set; } = default!;
 
         [Required, EmailAddress]
-        public string Email { get; set; } = string.Empty;
+        public string Email { get; set; } = default!;
 
         [Required]
         public DateTime HireDate { get; set; }

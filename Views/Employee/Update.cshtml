@@ -1,47 +1,47 @@
 @model Presentation.Models.EditEmployeeViewModel
-@{
-    ViewData["Title"] ="Update Employee";
 
+@{
+    ViewData["Title"] = "Edit Employee";
 }
+
+<h2>@ViewData["Title"]</h2>
+
 <form asp-action="Edit" method="post">
     <input type="hidden" asp-for="Id" />
 
     <div class="form-group">
         <label asp-for="FirstName"></label>
-        <input asp-for="FirstName" value="@Model.FirstName" class="form-control" />
+        <input asp-for="FirstName" class="form-control" />
         <span asp-validation-for="FirstName" class="text-danger"></span>
     </div>
 
     <div class="form-group">
         <label asp-for="LastName"></label>
-        <input asp-for="LastName" value="@Model.LastName" class="form-control" />
+        <input asp-for="LastName" class="form-control" />
         <span asp-validation-for="LastName" class="text-danger"></span>
     </div>
 
     <div class="form-group">
         <label asp-for="Email"></label>
-        <textarea asp-for="Email" value="@Model.Email" class="form-control"></textarea>
+        <input asp-for="Email" class="form-control" />
         <span asp-validation-for="Email" class="text-danger"></span>
     </div>
 
-
     <div class="form-group">
-        <label asp-for="Department"></label>
-        <textarea asp-for="Department" value="@Model.DepartmentId" class="form-control"></textarea>
-        <span asp-validation-for="Department" class="text-danger"></span>
+        <label asp-for="DepartmentId">Department</label>
+        <select asp-for="DepartmentId" class="form-control" asp-items="Model.Departments"></select>
+        <span asp-validation-for="DepartmentId" class="text-danger"></span>
     </div>
-
 
     <div class="form-group">
         <label asp-for="HireDate"></label>
-        <textarea asp-for="HireDate" value="@Model.HireDate" class="form-control"></textarea>
+        <input asp-for="HireDate" class="form-control" type="date" />
         <span asp-validation-for="HireDate" class="text-danger"></span>
     </div>
 
-
     <div class="form-group">
         <label asp-for="Salary"></label>
-        <textarea asp-for="Salary" value="@Model.Salary" class="form-control"></textarea>
+        <input asp-for="Salary" class="form-control" type="number" />
         <span asp-validation-for="Salary" class="text-danger"></span>
     </div>
 

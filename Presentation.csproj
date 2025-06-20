@@ -8,12 +8,10 @@
 
   <ItemGroup>
     <Content Remove="Views\Department\Delete.cshtml" />
-    <Content Remove="Views\Employee\Edit.cshtml" />
   </ItemGroup>
 
   <ItemGroup>
     <None Include="Views\Department\Delete.cshtml" />
-    <None Include="Views\Employee\Edit.cshtml" />
   </ItemGroup>
 
   <ItemGroup>

@@ -1,3 +1,12 @@
+C:\Users\USER\Desktop\EmployeeAppReloaded\Presentation\obj\Debug\net9.0\Presentation.csproj.AssemblyReference.cache
+C:\Users\USER\Desktop\EmployeeAppReloaded\Presentation\obj\Debug\net9.0\Presentation.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\USER\Desktop\EmployeeAppReloaded\Presentation\obj\Debug\net9.0\Presentation.AssemblyInfoInputs.cache
+C:\Users\USER\Desktop\EmployeeAppReloaded\Presentation\obj\Debug\net9.0\Presentation.AssemblyInfo.cs
+C:\Users\USER\Desktop\EmployeeAppReloaded\Presentation\obj\Debug\net9.0\Presentation.csproj.CoreCompileInputs.cache
+C:\Users\USER\Desktop\EmployeeAppReloaded\Presentation\obj\Debug\net9.0\Presentation.MvcApplicationPartsAssemblyInfo.cache
+C:\Users\USER\Desktop\EmployeeAppReloaded\Presentation\obj\Debug\net9.0\Presentation.RazorAssemblyInfo.cache
+C:\Users\USER\Desktop\EmployeeAppReloaded\Presentation\obj\Debug\net9.0\Presentation.RazorAssemblyInfo.cs
+C:\Users\USER\Desktop\EmployeeAppReloaded\Presentation\obj\Debug\net9.0\Presentation.sourcelink.json
 C:\Users\USER\Desktop\EmployeeAppReloaded\Presentation\bin\Debug\net9.0\appsettings.Development.json
 C:\Users\USER\Desktop\EmployeeAppReloaded\Presentation\bin\Debug\net9.0\appsettings.json
 C:\Users\USER\Desktop\EmployeeAppReloaded\Presentation\bin\Debug\net9.0\Presentation.staticwebassets.runtime.json
@@ -13,6 +22,9 @@ C:\Users\USER\Desktop\EmployeeAppReloaded\Presentation\bin\Debug\net9.0\Humanize
 C:\Users\USER\Desktop\EmployeeAppReloaded\Presentation\bin\Debug\net9.0\K4os.Compression.LZ4.dll
 C:\Users\USER\Desktop\EmployeeAppReloaded\Presentation\bin\Debug\net9.0\K4os.Compression.LZ4.Streams.dll
 C:\Users\USER\Desktop\EmployeeAppReloaded\Presentation\bin\Debug\net9.0\K4os.Hash.xxHash.dll
+C:\Users\USER\Desktop\EmployeeAppReloaded\Presentation\bin\Debug\net9.0\Microsoft.AspNetCore.Cryptography.Internal.dll
+C:\Users\USER\Desktop\EmployeeAppReloaded\Presentation\bin\Debug\net9.0\Microsoft.AspNetCore.Cryptography.KeyDerivation.dll
+C:\Users\USER\Desktop\EmployeeAppReloaded\Presentation\bin\Debug\net9.0\Microsoft.AspNetCore.Identity.EntityFrameworkCore.dll
 C:\Users\USER\Desktop\EmployeeAppReloaded\Presentation\bin\Debug\net9.0\Microsoft.Bcl.AsyncInterfaces.dll
 C:\Users\USER\Desktop\EmployeeAppReloaded\Presentation\bin\Debug\net9.0\Microsoft.Build.Locator.dll
 C:\Users\USER\Desktop\EmployeeAppReloaded\Presentation\bin\Debug\net9.0\Microsoft.CodeAnalysis.dll
@@ -31,6 +43,8 @@ C:\Users\USER\Desktop\EmployeeAppReloaded\Presentation\bin\Debug\net9.0\Microsof
 C:\Users\USER\Desktop\EmployeeAppReloaded\Presentation\bin\Debug\net9.0\Microsoft.Extensions.DependencyInjection.dll
 C:\Users\USER\Desktop\EmployeeAppReloaded\Presentation\bin\Debug\net9.0\Microsoft.Extensions.DependencyInjection.Abstractions.dll
 C:\Users\USER\Desktop\EmployeeAppReloaded\Presentation\bin\Debug\net9.0\Microsoft.Extensions.DependencyModel.dll
+C:\Users\USER\Desktop\EmployeeAppReloaded\Presentation\bin\Debug\net9.0\Microsoft.Extensions.Identity.Core.dll
+C:\Users\USER\Desktop\EmployeeAppReloaded\Presentation\bin\Debug\net9.0\Microsoft.Extensions.Identity.Stores.dll
 C:\Users\USER\Desktop\EmployeeAppReloaded\Presentation\bin\Debug\net9.0\Microsoft.Extensions.Logging.dll
 C:\Users\USER\Desktop\EmployeeAppReloaded\Presentation\bin\Debug\net9.0\Microsoft.Extensions.Logging.Abstractions.dll
 C:\Users\USER\Desktop\EmployeeAppReloaded\Presentation\bin\Debug\net9.0\Microsoft.Extensions.Options.dll
@@ -124,15 +138,6 @@ C:\Users\USER\Desktop\EmployeeAppReloaded\Presentation\bin\Debug\net9.0\Applicat
 C:\Users\USER\Desktop\EmployeeAppReloaded\Presentation\bin\Debug\net9.0\Data.dll
 C:\Users\USER\Desktop\EmployeeAppReloaded\Presentation\bin\Debug\net9.0\Application.pdb
 C:\Users\USER\Desktop\EmployeeAppReloaded\Presentation\bin\Debug\net9.0\Data.pdb
-C:\Users\USER\Desktop\EmployeeAppReloaded\Presentation\obj\Debug\net9.0\Presentation.csproj.AssemblyReference.cache
-C:\Users\USER\Desktop\EmployeeAppReloaded\Presentation\obj\Debug\net9.0\Presentation.GeneratedMSBuildEditorConfig.editorconfig
-C:\Users\USER\Desktop\EmployeeAppReloaded\Presentation\obj\Debug\net9.0\Presentation.AssemblyInfoInputs.cache
-C:\Users\USER\Desktop\EmployeeAppReloaded\Presentation\obj\Debug\net9.0\Presentation.AssemblyInfo.cs
-C:\Users\USER\Desktop\EmployeeAppReloaded\Presentation\obj\Debug\net9.0\Presentation.csproj.CoreCompileInputs.cache
-C:\Users\USER\Desktop\EmployeeAppReloaded\Presentation\obj\Debug\net9.0\Presentation.MvcApplicationPartsAssemblyInfo.cache
-C:\Users\USER\Desktop\EmployeeAppReloaded\Presentation\obj\Debug\net9.0\Presentation.RazorAssemblyInfo.cache
-C:\Users\USER\Desktop\EmployeeAppReloaded\Presentation\obj\Debug\net9.0\Presentation.RazorAssemblyInfo.cs
-C:\Users\USER\Desktop\EmployeeAppReloaded\Presentation\obj\Debug\net9.0\Presentation.sourcelink.json
 C:\Users\USER\Desktop\EmployeeAppReloaded\Presentation\obj\Debug\net9.0\scopedcss\Views\Shared\_Layout.cshtml.rz.scp.css
 C:\Users\USER\Desktop\EmployeeAppReloaded\Presentation\obj\Debug\net9.0\scopedcss\bundle\Presentation.styles.css
 C:\Users\USER\Desktop\EmployeeAppReloaded\Presentation\obj\Debug\net9.0\scopedcss\projectbundle\Presentation.bundle.scp.css
