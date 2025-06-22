@@ -1,30 +1,84 @@
+@model Data.Model.Employee
+@using System.Linq
+
+@{
+    ViewData["Title"] = "Employee Details";
+}
+
 <h1>Employee Details</h1>
 
 <table class="table table-bordered">
+    <tr><th>First Name</th><td>@Model.FirstName</td></tr>
+    <tr><th>Last Name</th><td>@Model.LastName</td></tr>
+    <tr><th>Email</th><td>@Model.Email</td></tr>
+    <tr><th>Department</th><td>@Model.Department?.Name</td></tr>
+    <tr><th>Hire Date</th><td>@Model.HireDate.ToString("yyyy-MM-dd")</td></tr>
+    <tr><th>Salary</th><td>$@Model.Salary</td></tr>
     <tr>
-        <th>First Name</th>
-        <td>@Model.FirstName</td>
-    </tr>
-    <tr>
-        <th>Last Name</th>
-        <td>@Model.LastName</td>
-    </tr>
-    <tr>
-        <th>Email</th>
-        <td>@Model.Email</td>
-    </tr>
-    <tr>
-        <th>Department</th>
-        <td>@Model.Department</td>
-    </tr>
-    <tr>
-        <th>Hire Date</th>
-        <td>@Model.HireDate.ToString("yyyy-MM-dd")</td> 
-    </tr>
-    <tr>
-        <th>Salary</th>
-        <td>$@Model.Salary</td>
+        <th>Addresses</th>
+        <td>
+            @if (Model.Addresses != null && Model.Addresses.Any())
+            {
+                <ul class="mb-0">
+                    @foreach (var address in Model.Addresses)
+                    {
+                        <li>
+                            @address.Street, @address.City, @address.State
+                            <form asp-action="DeleteAddress" method="post" class="d-inline ms-2">
+                                <input type="hidden" name="addressId" value="@address.Id" />
+                                <input type="hidden" name="employeeId" value="@Model.Id" />
+                                <button type="submit" class="btn btn-sm btn-danger">Delete</button>
+                            </form>
+                        </li>
+                    }
+                </ul>
+            }
+            else
+            {
+                <span class="text-muted">No addresses available.</span>
+            }
+        </td>
     </tr>
 </table>
 
-<a asp-action="Index" class="btn btn-outline-primary btn-sm">Back to Employee List</a>
+<hr />
+
+<!-- Add Address Button -->
+<button id="toggleAddressForm" class="btn btn-outline-success mb-3">Add Address</button>
+
+<!-- Hidden Add Address Form -->
+<div id="addressFormContainer" style="display: none;">
+    <h4>Add New Address</h4>
+    <form asp-action="AddAddress" method="post">
+        <input type="hidden" name="employeeId" value="@Model.Id" />
+
+        <div class="row mb-3">
+            <div class="col-md-6">
+                <label class="form-label">Street</label>
+                <input name="Street" class="form-control" required />
+            </div>
+            <div class="col-md-3">
+                <label class="form-label">City</label>
+                <input name="City" class="form-control" required />
+            </div>
+            <div class="col-md-3">
+                <label class="form-label">State</label>
+                <input name="State" class="form-control" />
+            </div>
+        </div>
+
+        <button type="submit" class="btn btn-success">Add Address</button>
+    </form>
+</div>
+
+<hr />
+<a asp-action="Index" class="btn btn-outline-primary">Back to Employee List</a>
+
+@section Scripts {
+    <script>
+        document.getElementById("toggleAddressForm").addEventListener("click", function () {
+            var formContainer = document.getElementById("addressFormContainer");
+            formContainer.style.display = formContainer.style.display === "none" ? "block" : "none";
+        });
+    </script>
+}

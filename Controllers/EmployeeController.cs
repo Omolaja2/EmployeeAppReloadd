@@ -99,6 +99,37 @@ namespace Presentation.Controllers
             return View(employee);
         }
 
+
+        [HttpPost]
+        public async Task<IActionResult> AddAddress(Guid employeeId, Adress address)
+        {
+            if (!ModelState.IsValid)
+                return RedirectToAction("Detail", new { id = employeeId });
+
+            address.Id = Guid.NewGuid();
+            address.EmployeeId = employeeId;
+
+            _context.Addresses.Add(address);
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction("Detail", new { id = employeeId });
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> DeleteAddress(Guid addressId, Guid employeeId)
+        {
+            var address = await _context.Addresses.FindAsync(addressId);
+            if (address != null)
+            {
+                _context.Addresses.Remove(address);
+                await _context.SaveChangesAsync();
+            }
+
+            return RedirectToAction("Detail", new { id = employeeId });
+        }
+
+
+        [HttpGet]
         public async Task<IActionResult> Update(Guid id)
         {
             var employee = await _context.Employees.FirstOrDefaultAsync(c => c.Id == id);
@@ -122,7 +153,7 @@ namespace Presentation.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Update(EditEmployeeViewModel viewModel)
+        public async Task<IActionResult> Edit(EditEmployeeViewModel viewModel)
         {
             if (!ModelState.IsValid)
             {
@@ -147,6 +178,7 @@ namespace Presentation.Controllers
 
             return RedirectToAction("Index");
         }
+
 
         [HttpGet]
         public async Task<IActionResult> Delete(Guid id)

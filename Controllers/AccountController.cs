@@ -1,10 +1,8 @@
-using Data;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Presentation.Models.AccountVM;
-using System.Linq;
-using System.Threading.Tasks;
+using System.ComponentModel.DataAnnotations;
 
 namespace Presentation.Controllers
 {
@@ -12,113 +10,201 @@ namespace Presentation.Controllers
     {
         private readonly UserManager<IdentityUser> _userManager;
         private readonly SignInManager<IdentityUser> _signInManager;
+        private readonly IEmailSender _emailSender;
 
         public AccountController(
+            UserManager<IdentityUser> userManager,
             SignInManager<IdentityUser> signInManager,
-            UserManager<IdentityUser> userManager)
+            IEmailSender emailSender)
         {
-            _signInManager = signInManager;
             _userManager = userManager;
+            _signInManager = signInManager;
+            _emailSender = emailSender;
         }
 
         public IActionResult Index()
         {
-            return View("Index", "Home");
+            return RedirectToAction("Index", "Home");
         }
 
-        // Register!
+
         [HttpGet]
-        public IActionResult Register()
-        {
-            return View();
-        }
+        public IActionResult Register() => View();
 
         [HttpPost]
         public async Task<IActionResult> Register(RegisterViewModel model)
         {
             if (ModelState.IsValid)
             {
-                var user = new IdentityUser
-                {
-                    UserName = model.Email,
-                    Email = model.Email
-                };
-
+                var user = new IdentityUser { UserName = model.Email, Email = model.Email };
                 var result = await _userManager.CreateAsync(user, model.Password);
 
                 if (result.Succeeded)
                 {
-                    await _signInManager.SignInAsync(user, isPersistent: false);
-                    return RedirectToAction("Index", "Home");
+                    var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+                    var link = Url.Action("ConfirmEmail", "Account", new { userId = user.Id, token }, Request.Scheme);
+                    await _emailSender.SendEmailAsync(user.Email, "Confirm your email",
+                        $"<p>Click <a href='{link}'>here</a> to confirm your account.</p>");
+
+                    SetFlashMessage("Registration successful! Please check your email to confirm your account.", "success");
+                    return RedirectToAction("Login");
                 }
 
-                var errorMessages = string.Join("<br>", result.Errors.Select(e => e.Description));
-                SetFlashMessage(errorMessages, "error");
+                SetFlashMessage(string.Join("<br>", result.Errors.Select(e => e.Description)), "error");
             }
-
             return View(model);
         }
 
 
 
-        // Login
-        [HttpGet]
-        public IActionResult Login()
-        {
-            return View();
-        }
 
-        [HttpPost]
-        public async Task<IActionResult> Login(LoginViewModel model)
+        [HttpGet]
+        public async Task<IActionResult> ConfirmEmail(string userId, string token)
         {
-            if (ModelState.IsValid)
+            var user = await _userManager.FindByIdAsync(userId);
+            if (user == null) return NotFound();
+
+            var result = await _userManager.ConfirmEmailAsync(user, token);
+            if (result.Succeeded)
             {
-                var result = await _signInManager.PasswordSignInAsync(
-                    model.Email, model.Password, model.RememberMe, lockoutOnFailure: true);
-
-                if (result.Succeeded)
-                {
-                    return RedirectToAction("Index", "Home");
-                }
-                else if (result.IsLockedOut)
-                {
-                    SetFlashMessage("Your account is Temporarily Locked!. Please try again later After 2 mins", "error");
-                    return View(model);
-                }
-                else
-                {
-                    SetFlashMessage("Invalid login attempt!.", "error");
-                    return View(model);
-                }
-
+                await _userManager.SetTwoFactorEnabledAsync(user, true);
+                SetFlashMessage("Email confirmed! You may now log in.", "success");
+                return RedirectToAction("Login");
             }
 
-            return View(model);
-        }
-
-
-
-        // Logout
-        [HttpGet]
-        public async Task<IActionResult> Logout()
-        {
-            await _signInManager.SignOutAsync();
+            SetFlashMessage("Email confirmation failed.", "error");
             return RedirectToAction("Index", "Home");
         }
 
 
-
-        
-
-        // Forgot Password (Reset)
         [HttpGet]
-        public IActionResult ForgotPassword()
+        public IActionResult Login() => View();
+        // {
+        //     return View();
+        // }
+
+
+        [HttpPost]
+        public async Task<IActionResult> Login(LoginViewModel model)
         {
-            return View();
+            if (!ModelState.IsValid)
+                return View(model);
+
+            var user = await _userManager.FindByEmailAsync(model.Email);
+
+            if (user == null || !await _userManager.IsEmailConfirmedAsync(user))
+            {
+                SetFlashMessage("You must confirm your email before logging in.", "error");
+                return View(model);
+            }
+
+            var result = await _signInManager.CheckPasswordSignInAsync(user, model.Password, lockoutOnFailure: true);
+
+            if (result.Succeeded)
+            {
+
+                var randomcode = new Random().Next(100000, 999999).ToString();
+
+
+                TempData["2fa_code"] = randomcode;
+                TempData["2fa_user"] = user.Email;
+                TempData["rememberMe"] = model.RememberMe;
+
+                // Send email
+                await _emailSender.SendEmailAsync(user.Email, "Your 2FA Code",
+                    $"Your security code is: <strong>{randomcode}</strong>");
+
+                return RedirectToAction("Verify2fa");
+            }
+            else if (result.IsLockedOut)
+            {
+                SetFlashMessage("Account is locked. Try again later.", "error");
+                return View(model);
+            }
+
+            SetFlashMessage("Invalid login attempt.", "error");
+            return View(model);
+        }
+
+
+
+        [HttpGet]
+        public IActionResult Verify2fa(bool rememberMe)
+        {
+            return View(new Verify2faViewModel { RememberMe = rememberMe });
         }
 
         [HttpPost]
+        public async Task<IActionResult> Verify2fa(Verify2faViewModel model)
+        {
+            var expectedCode = TempData["2fa_code"]?.ToString();
+            var email = TempData["2fa_user"]?.ToString();
+            var rememberMe = TempData["rememberMe"] != null && Convert.ToBoolean(TempData["rememberMe"]);
+
+            if (string.IsNullOrEmpty(expectedCode) || string.IsNullOrEmpty(email))
+            {
+
+                SetFlashMessage("Session expired. Please log in again.", "error");
+                return RedirectToAction("Login");
+            }
+
+            if (expectedCode == model.Code)
+            {
+                var user = await _userManager.FindByEmailAsync(email);
+                if (user == null)
+                {
+                    SetFlashMessage("User not found.", "error");
+                    return RedirectToAction("Login");
+                }
+
+                await _signInManager.SignInAsync(user, rememberMe);
+                return RedirectToAction("Index", "Home");
+            }
+
+            ModelState.AddModelError("Code", "Invalid code. Please try again.");
+            return View(model);
+        }
+
+
+
+        [HttpGet]
+        public IActionResult ForgotPassword() => View();
+        // {
+        //     return View(); 
+        // }
+        
+
+        [HttpPost]
         public async Task<IActionResult> ForgotPassword(ForgotPasswordViewModel model)
+        {
+            if (!ModelState.IsValid) return View(model);
+
+            var user = await _userManager.FindByEmailAsync(model.Email);
+            if (user == null || !await _userManager.IsEmailConfirmedAsync(user))
+            {
+                SetFlashMessage("User not found or email not confirmed.", "error");
+                return View(model);
+            }
+
+            var token = await _userManager.GeneratePasswordResetTokenAsync(user);
+            var link = Url.Action("ResetPassword", "Account", new { token, email = user.Email }, Request.Scheme);
+            await _emailSender.SendEmailAsync(user.Email, "Reset your password",
+                $"<p>Click <a href='{link}'>here</a> to reset your password.</p>");
+
+            SetFlashMessage("Reset link sent. Check your inbox.", "success");
+            return RedirectToAction("Login");
+        }
+
+        
+        [HttpGet]
+        public IActionResult ResetPassword(string token, string email)
+        {
+            return View(new ResetPasswordViewModel { Token = token, Email = email });
+        }
+  
+    
+        [HttpPost]
+        public async Task<IActionResult> ResetPassword(ResetPasswordViewModel model)
         {
             if (!ModelState.IsValid)
                 return View(model);
@@ -126,16 +212,14 @@ namespace Presentation.Controllers
             var user = await _userManager.FindByEmailAsync(model.Email);
             if (user == null)
             {
-                SetFlashMessage("User not found!", "error");
+                SetFlashMessage("User not found.", "error");
                 return View(model);
             }
 
-            var token = await _userManager.GeneratePasswordResetTokenAsync(user);
-            var result = await _userManager.ResetPasswordAsync(user, token, model.NewPassword);
-
+            var result = await _userManager.ResetPasswordAsync(user, model.Token, model.NewPassword);
             if (result.Succeeded)
             {
-                SetFlashMessage("Password reset successful!", "success");
+                SetFlashMessage("Password reset successful.", "success");
                 return RedirectToAction("Login");
             }
 
@@ -144,5 +228,15 @@ namespace Presentation.Controllers
 
             return View(model);
         }
+
+        // Logout
+        [HttpGet]
+        public async Task<IActionResult> Logout()
+        {
+            await _signInManager.SignOutAsync();
+            return RedirectToAction("Index", "Home");
+        }
     }
+
+
 }
