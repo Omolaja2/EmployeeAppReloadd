@@ -1,21 +1,32 @@
 using Data.Context;
 using Data.Model;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Presentation.Models;
+using Application.Services.UploadImage;
 
 namespace Presentation.Controllers
 {
-
     public class EmployeeController : Controller
     {
         private readonly EmployeeAppDbContext _context;
+        private readonly ICloudinaryService _cloudinaryService;
 
-        public EmployeeController(EmployeeAppDbContext context)
+        public EmployeeController(EmployeeAppDbContext context, ICloudinaryService cloudinaryService)
         {
             _context = context;
+            _cloudinaryService = cloudinaryService;
+        }
+
+        private async Task<List<SelectListItem>> GetDepartmentsAsync()
+        {
+            return await _context.Departments
+                .Select(d => new SelectListItem
+                {
+                    Value = d.Id.ToString(),
+                    Text = d.Name
+                }).ToListAsync();
         }
 
         [HttpGet]
@@ -34,7 +45,7 @@ namespace Presentation.Controllers
                     HireDate = e.HireDate,
                     Salary = e.Salary,
                     DepartmentId = e.DepartmentId,
-                    DepartmentName = e.Department?.Name
+                    ProfileImageUrl = e.ProfileImageUrl
                 }).ToList()
             };
 
@@ -44,30 +55,58 @@ namespace Presentation.Controllers
         [HttpGet]
         public async Task<IActionResult> Create()
         {
-            var departments = await _context.Departments.ToListAsync();
-
             var model = new CreateEmployeeViewModel
             {
-                Departments = departments.Select(d => new SelectListItem
-                {
-                    Value = d.Id.ToString(),
-                    Text = d.Name
-                }).ToList()
+                Departments = await GetDepartmentsAsync()
             };
 
             return View(model);
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(CreateEmployeeViewModel model)
         {
             if (!ModelState.IsValid)
             {
-                model.Departments = await _context.Departments
-                    .Select(d => new SelectListItem { Value = d.Id.ToString(), Text = d.Name })
-                    .ToListAsync();
+                model.Departments = await GetDepartmentsAsync();
                 return View(model);
             }
+
+            string? imageUrl = null;
+            string? publicId = null;
+
+            if (model.ProfileImage != null && model.ProfileImage.Length > 0)
+            {
+                var allowedTypes = new[] { "image/jpeg", "image/png", "image/gif" };
+
+                if (!allowedTypes.Contains(model.ProfileImage.ContentType))
+                {
+                    ModelState.AddModelError("ProfileImage", "Only JPG, PNG, or GIF images are allowed.");
+                    model.Departments = await GetDepartmentsAsync();
+                    return View(model);
+                }
+
+                var uploadResult = await _cloudinaryService.UploadImageAsync(model.ProfileImage);
+
+                if (uploadResult == null)
+                {
+                    ModelState.AddModelError(string.Empty, "Image upload failed: No response from Cloudinary.");
+                    model.Departments = await GetDepartmentsAsync();
+                    return View(model);
+                }
+
+                if (uploadResult.Error != null)
+                {
+                    ModelState.AddModelError(string.Empty, $"Image upload failed: {uploadResult.Error.Message}");
+                    model.Departments = await GetDepartmentsAsync();
+                    return View(model);
+                }
+
+                imageUrl = uploadResult.SecureUrl?.ToString();
+                publicId = uploadResult.PublicId;
+            }
+
 
             var employee = new Employee
             {
@@ -77,13 +116,15 @@ namespace Presentation.Controllers
                 Email = model.Email,
                 HireDate = model.HireDate,
                 Salary = model.Salary,
-                DepartmentId = model.DepartmentId
+                DepartmentId = model.DepartmentId,
+                ProfileImageUrl = imageUrl,
+                ProfileImagePublicId = publicId
             };
 
             _context.Employees.Add(employee);
             await _context.SaveChangesAsync();
 
-            return RedirectToAction("Index");
+            return RedirectToAction(nameof(Index));
         }
 
         [HttpGet]
@@ -91,6 +132,7 @@ namespace Presentation.Controllers
         {
             var employee = await _context.Employees
                 .Include(e => e.Department)
+                .Include(e => e.Addresses)
                 .FirstOrDefaultAsync(e => e.Id == id);
 
             if (employee == null)
@@ -99,43 +141,35 @@ namespace Presentation.Controllers
             return View(employee);
         }
 
-
         [HttpPost]
-        public async Task<IActionResult> AddAddress(Guid employeeId, Adress address)
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Delete(Guid id)
+
         {
-            if (!ModelState.IsValid)
-                return RedirectToAction("Detail", new { id = employeeId });
+            var employee = await _context.Employees.FindAsync(id);
+            if (employee == null)
+                return NotFound();
 
-            address.Id = Guid.NewGuid();
-            address.EmployeeId = employeeId;
-
-            _context.Addresses.Add(address);
-            await _context.SaveChangesAsync();
-
-            return RedirectToAction("Detail", new { id = employeeId });
-        }
-
-        [HttpPost]
-        public async Task<IActionResult> DeleteAddress(Guid addressId, Guid employeeId)
-        {
-            var address = await _context.Addresses.FindAsync(addressId);
-            if (address != null)
+            if (!string.IsNullOrEmpty(employee.ProfileImagePublicId))
             {
-                _context.Addresses.Remove(address);
-                await _context.SaveChangesAsync();
+                await _cloudinaryService.DeleteImageAsync(employee.ProfileImagePublicId);
             }
 
-            return RedirectToAction("Detail", new { id = employeeId });
+            _context.Employees.Remove(employee);
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction(nameof(Index));
         }
 
 
         [HttpGet]
-        public async Task<IActionResult> Update(Guid id)
+        public async Task<IActionResult> Edit(Guid id)
         {
-            var employee = await _context.Employees.FirstOrDefaultAsync(c => c.Id == id);
-            if (employee == null) return NotFound();
+            var employee = await _context.Employees.FindAsync(id);
+            if (employee == null)
+                return NotFound();
 
-            var updateVm = new EditEmployeeViewModel
+            var model = new EditEmployeeViewModel
             {
                 Id = employee.Id,
                 FirstName = employee.FirstName,
@@ -144,66 +178,73 @@ namespace Presentation.Controllers
                 HireDate = employee.HireDate,
                 Salary = employee.Salary,
                 DepartmentId = employee.DepartmentId,
-                Departments = await _context.Departments
-                    .Select(d => new SelectListItem { Value = d.Id.ToString(), Text = d.Name })
-                    .ToListAsync()
+                CurrentProfileImageUrl = employee.ProfileImageUrl,
+                Departments = await GetDepartmentsAsync()
             };
 
-            return View(updateVm);
+            return View(model);
         }
 
+        
         [HttpPost]
-        public async Task<IActionResult> Edit(EditEmployeeViewModel viewModel)
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Edit(EditEmployeeViewModel model)
         {
             if (!ModelState.IsValid)
             {
-                viewModel.Departments = await _context.Departments
-                    .Select(d => new SelectListItem { Value = d.Id.ToString(), Text = d.Name })
-                    .ToListAsync();
-                return View(viewModel);
+                model.Departments = await GetDepartmentsAsync();
+                return View(model);
             }
 
-            var employee = await _context.Employees.FindAsync(viewModel.Id);
-            if (employee == null) return NotFound();
+            var employee = await _context.Employees.FindAsync(model.Id);
+            if (employee == null)
+                return NotFound();
 
-            employee.FirstName = viewModel.FirstName;
-            employee.LastName = viewModel.LastName;
-            employee.Email = viewModel.Email;
-            employee.HireDate = viewModel.HireDate;
-            employee.Salary = viewModel.Salary;
-            employee.DepartmentId = viewModel.DepartmentId;
+            employee.FirstName = model.FirstName;
+            employee.LastName = model.LastName;
+            employee.Email = model.Email;
+            employee.HireDate = model.HireDate;
+            employee.Salary = model.Salary;
+            employee.DepartmentId = model.DepartmentId;
 
-            _context.Employees.Update(employee);
+            if (model.ProfileImage != null && model.ProfileImage.Length > 0)
+            {
+                var allowedTypes = new[] { "image/jpeg", "image/png", "image/gif" };
+                if (!allowedTypes.Contains(model.ProfileImage.ContentType))
+                {
+                    ModelState.AddModelError("ProfileImage", "Only JPG, PNG, or GIF images are allowed.");
+                    model.Departments = await GetDepartmentsAsync();
+                    return View(model);
+                }
+
+
+                if (!string.IsNullOrEmpty(employee.ProfileImagePublicId))
+                {
+                    await _cloudinaryService.DeleteImageAsync(employee.ProfileImagePublicId);
+                }
+
+
+                var uploadResult = await _cloudinaryService.UploadImageAsync(model.ProfileImage);
+
+                if (uploadResult != null && uploadResult.Error == null)
+                {
+                    employee.ProfileImageUrl = uploadResult.SecureUrl?.ToString();
+                    employee.ProfileImagePublicId = uploadResult.PublicId;
+                }
+                else
+                {
+                    ModelState.AddModelError(string.Empty, "Image upload failed. Please try again.");
+                    model.Departments = await GetDepartmentsAsync();
+                    return View(model);
+                }
+            }
+
             await _context.SaveChangesAsync();
 
-            return RedirectToAction("Index");
+            return RedirectToAction(nameof(Index));
         }
 
 
-        [HttpGet]
-        public async Task<IActionResult> Delete(Guid id)
-        {
-            var employee = await _context.Employees
-                .Include(e => e.Department)
-                .FirstOrDefaultAsync(e => e.Id == id);
 
-            if (employee == null) return NotFound();
-
-            return View(employee);
-        }
-
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(Guid id)
-        {
-            var employee = await _context.Employees.FindAsync(id);
-            if (employee == null) return NotFound();
-
-            _context.Employees.Remove(employee);
-            await _context.SaveChangesAsync();
-
-            return RedirectToAction("Index");
-        }
     }
 }
-

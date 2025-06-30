@@ -2,20 +2,100 @@
     ViewData["Title"] = "Home";
 }
 
-<div class="container min-vh-100 d-flex justify-content-center align-items-center bg-light">
-    <div class="text-center bg-white shadow p-5 rounded-4" style="max-width: 600px; width: 100%;">
+<style>
+    body {
+        background-image: url('https://images.unsplash.com/photo-1522199670076-2852f80289c3?ixlib=rb-4.0.3&auto=format&fit=crop&w=1470&q=80');
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+        min-height: 100vh;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        margin: 0;
+        padding: 0;
+    }
 
-        <h1 class="display-5 fw-bold text-primary mb-3">Welcome Back 👋</h1>
+    .glass-card-home {
+        background: rgba(255, 255, 255, 0.85);
+        backdrop-filter: blur(10px);
+        border-radius: 20px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        color: #212529;
+        padding: 50px 30px;
+        max-width: 650px;
+        width: 100%;
+        text-align: center;
+    }
+
+    h1 {
+        font-size: 2.5rem;
+        margin-bottom: 20px;
+        font-weight: 700;
+    }
+
+    p.lead {
+        font-size: 1.2rem;
+        color: #495057;
+        margin-bottom: 30px;
+    }
+
+    .btn-custom {
+        border-radius: 30px;
+        font-weight: 600;
+        padding: 12px 30px;
+        transition: all 0.3s ease;
+        font-size: 1rem;
+    }
+
+    .btn-outline-dark:hover {
+        background-color: #212529;
+        color: #fff;
+    }
+
+    .btn-outline-success:hover {
+        background-color: #198754;
+        color: #fff;
+    }
+
+    .btn-outline-danger:hover {
+        background-color: #dc3545;
+        color: #fff;
+    }
+
+    .action-buttons .btn {
+        min-width: 140px;
+    }
+</style>
+
+<div class="container d-flex justify-content-center align-items-center min-vh-100">
+    <div class="glass-card-home">
+
+        <h1>👋 Welcome to Employee Manager</h1>
 
         @if (User.Identity != null && User.Identity.IsAuthenticated)
         {
-            <p class="lead text-muted">Hello, <strong>@User.Identity.Name</strong>! You are now logged in.</p>
+            <p class="lead">Hello <strong>@User.Identity.Name</strong>, you're logged in and ready to manage employees.</p>
+
+            <div class="action-buttons d-flex justify-content-center gap-3 flex-wrap">
+                <a asp-controller="Employee" asp-action="Index" class="btn btn-outline-dark btn-custom">
+                    View Employees
+                </a>
+                <a asp-controller="Account" asp-action="Logout" class="btn btn-outline-danger btn-custom">
+                    Logout
+                </a>
+            </div>
         }
         else
         {
-           <div class="mt-4 d-flex justify-content-center gap-3">
-            <a asp-controller="Account" asp-action="Login" class="btn btn-outline-danger">Login</a>
-        </div>
+            <p class="lead">Login or Register below to manage employees and departments in the system.</p>
+
+            <div class="action-buttons d-flex justify-content-center gap-3 flex-wrap">
+                <a asp-controller="Account" asp-action="Login" class="btn btn-outline-dark btn-custom">
+                    Login
+                </a>
+                <a asp-controller="Account" asp-action="Register" class="btn btn-outline-success btn-custom">
+                    Register
+                </a>
+            </div>
         }
 
     </div>

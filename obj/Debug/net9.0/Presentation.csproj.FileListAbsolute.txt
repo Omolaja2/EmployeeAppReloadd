@@ -8,6 +8,7 @@ C:\Users\USER\Desktop\EmployeeAppReloaded\Presentation\bin\Debug\net9.0\Presenta
 C:\Users\USER\Desktop\EmployeeAppReloaded\Presentation\bin\Debug\net9.0\Presentation.dll
 C:\Users\USER\Desktop\EmployeeAppReloaded\Presentation\bin\Debug\net9.0\Presentation.pdb
 C:\Users\USER\Desktop\EmployeeAppReloaded\Presentation\bin\Debug\net9.0\BouncyCastle.Cryptography.dll
+C:\Users\USER\Desktop\EmployeeAppReloaded\Presentation\bin\Debug\net9.0\CloudinaryDotNet.dll
 C:\Users\USER\Desktop\EmployeeAppReloaded\Presentation\bin\Debug\net9.0\Google.Protobuf.dll
 C:\Users\USER\Desktop\EmployeeAppReloaded\Presentation\bin\Debug\net9.0\Humanizer.dll
 C:\Users\USER\Desktop\EmployeeAppReloaded\Presentation\bin\Debug\net9.0\K4os.Compression.LZ4.dll
@@ -46,6 +47,7 @@ C:\Users\USER\Desktop\EmployeeAppReloaded\Presentation\bin\Debug\net9.0\Microsof
 C:\Users\USER\Desktop\EmployeeAppReloaded\Presentation\bin\Debug\net9.0\Mono.TextTemplating.dll
 C:\Users\USER\Desktop\EmployeeAppReloaded\Presentation\bin\Debug\net9.0\MySql.Data.dll
 C:\Users\USER\Desktop\EmployeeAppReloaded\Presentation\bin\Debug\net9.0\MySql.EntityFrameworkCore.dll
+C:\Users\USER\Desktop\EmployeeAppReloaded\Presentation\bin\Debug\net9.0\Newtonsoft.Json.dll
 C:\Users\USER\Desktop\EmployeeAppReloaded\Presentation\bin\Debug\net9.0\System.CodeDom.dll
 C:\Users\USER\Desktop\EmployeeAppReloaded\Presentation\bin\Debug\net9.0\System.Composition.AttributedModel.dll
 C:\Users\USER\Desktop\EmployeeAppReloaded\Presentation\bin\Debug\net9.0\System.Composition.Convention.dll

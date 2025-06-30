@@ -1,51 +1,54 @@
 @model Presentation.Models.ListEmployeeViewModel
 
 @{
-    ViewData["Title"] = "Employee";
+    ViewData["Title"] = "Employee List";
 }
 
-<h1>@ViewData["Title"]</h1>
+<div class="container mt-4">
+    <h2 class="mb-4">Employee List</h2>
 
-<a asp-action="Create" class="btn btn-outline-success">+ Create New Employee</a>
-<hr />
+    <a asp-action="Create" class="btn btn-success mb-3">+ Create New Employee</a>
 
-@if (Model?.Employee == null || !Model.Employee.Any())
-{
-    <p class="text-danger">No records available!</p>
-}
-else
-{
-    <table class="table table-striped">
-        <thead>
-            <tr>
-                <th>First Name</th>
-                <th>Last Name</th>
-                <th>Email</th>
-                <th>Hire Date</th>
-                <th>Salary</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var item in Model.Employee)
-            {
+    @if (Model?.Employee == null || !Model.Employee.Any())
+    {
+        <div class="alert alert-warning">
+            No employee records available!
+        </div>
+    }
+    else
+    {
+        <table class="table table-striped table-bordered">
+            <thead class="table-dark">
                 <tr>
-                    <td>@item.FirstName</td>
-                    <td>@item.LastName</td>
-                    <td>@item.Email</td>
-                    <td>@item.HireDate.ToShortDateString()</td>
-                    <td>@item.Salary.ToString("C")</td>
-                    <td>
-                        <div class="btn-group">
-                            <a asp-action="Detail" asp-route-id="@item.Id" class="btn btn-outline-primary btn-sm">Detail</a>
-                            <a asp-action="Update" asp-route-id="@item.Id" class="btn btn-outline-secondary btn-sm">Edit</a>
-                            <form asp-action="Delete" asp-route-id="@item.Id" method="post" onsubmit="return confirm('Are you sure?');">
-                                <button type="submit" class="btn btn-outline-danger btn-sm">Delete</button>
-                            </form>
-                        </div>
-                    </td>
+                    <th>First Name</th>
+                    <th>Last Name</th>
+                    <th>Email</th>
+                    <th>Hire Date</th>
+                    <th>Salary</th>
+                    <th>Actions</th>
                 </tr>
-            }
-        </tbody>
-    </table>
-}
+            </thead>
+            <tbody>
+                @foreach (var item in Model.Employee)
+                {
+                    <tr>
+                        <td>@item.FirstName</td>
+                        <td>@item.LastName</td>
+                        <td>@item.Email</td>
+                        <td>@item.HireDate.ToString("yyyy-MM-dd")</td>
+                        <td>@item.Salary.ToString("C")</td>
+                        <td>
+                            <a asp-action="Detail" asp-route-id="@item.Id" class="btn btn-sm btn-primary me-1">Details</a>
+                            <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-secondary me-1">Edit</a>
+
+                            <form asp-action="Delete" asp-route-id="@item.Id" method="post" class="d-inline"
+                                  onsubmit="return confirm('Are you sure you want to delete this employee?');">
+                                <button type="submit" class="btn btn-sm btn-danger">Delete</button>
+                            </form>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+</div>

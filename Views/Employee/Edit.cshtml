@@ -1,0 +1,77 @@
+@model Presentation.Models.EditEmployeeViewModel
+
+@{
+    ViewData["Title"] = "Edit Employee";
+}
+
+<h2 class="mb-4">Edit Employee</h2>
+
+<form asp-action="Edit" method="post" enctype="multipart/form-data">
+    @Html.AntiForgeryToken()
+    <input type="hidden" asp-for="Id" />
+
+    <div class="mb-3">
+        <label asp-for="FirstName" class="form-label">First Name</label>
+        <input asp-for="FirstName" class="form-control" />
+        <span asp-validation-for="FirstName" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="LastName" class="form-label">Last Name</label>
+        <input asp-for="LastName" class="form-control" />
+        <span asp-validation-for="LastName" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Email" class="form-label">Email</label>
+        <input asp-for="Email" class="form-control" />
+        <span asp-validation-for="Email" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="HireDate" class="form-label">Hire Date</label>
+        <input asp-for="HireDate" class="form-control" type="date" />
+        <span asp-validation-for="HireDate" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Salary" class="form-label">Salary</label>
+        <input asp-for="Salary" class="form-control" />
+        <span asp-validation-for="Salary" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="DepartmentId" class="form-label">Department</label>
+        <select asp-for="DepartmentId" asp-items="Model.Departments" class="form-select">
+            <option value="">-- Select Department --</option>
+        </select>
+        <span asp-validation-for="DepartmentId" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Current Profile Image:</label>
+        @if (!string.IsNullOrEmpty(Model.CurrentProfileImageUrl))
+        {
+            <div class="mb-2">
+                <img src="@Model.CurrentProfileImageUrl" alt="Current Profile Image" class="img-thumbnail" style="max-width:150px;" />
+            </div>
+        }
+        else
+        {
+            <p class="text-muted">No profile image uploaded.</p>
+        }
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="ProfileImage" class="form-label">Upload New Profile Image (Optional)</label>
+        <input asp-for="ProfileImage" type="file" class="form-control" />
+        <span asp-validation-for="ProfileImage" class="text-danger"></span>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Update Employee</button>
+    <a asp-action="Index" class="btn btn-outline-secondary ms-2">Cancel</a>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

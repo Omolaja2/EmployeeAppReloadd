@@ -3,55 +3,35 @@
     ViewData["Title"] = "Login";
 }
 
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
-
 <div class="container mt-5">
-    <h2 class="mb-4 text-primary">Login</h2>
+    <h2>Login</h2>
 
     <form asp-action="Login" method="post">
         <div class="mb-3">
-            <label asp-for="Email" class="form-label"></label>
-            <input asp-for="Email" class="form-control" />
+            <label asp-for="Email" class="form-label">Email Address</label>
+            <input asp-for="Email" class="form-control" placeholder="Enter your email" />
             <span asp-validation-for="Email" class="text-danger"></span>
         </div>
 
         <div class="mb-3">
-            <label asp-for="Password" class="form-label"></label>
-            <div class="input-group">
-                <input asp-for="Password" class="form-control" type="password" id="password" />
-                <button type="button" class="btn btn-outline-secondary" onclick="togglePassword('password', this)">
-                    <i class="fas fa-eye"></i>
-                </button>
-            </div>
+            <label asp-for="Password" class="form-label">Password</label>
+            <input asp-for="Password" class="form-control" placeholder="Enter password" />
             <span asp-validation-for="Password" class="text-danger"></span>
         </div>
 
         <div class="mb-3 form-check">
             <input asp-for="RememberMe" class="form-check-input" />
-            <label asp-for="RememberMe" class="form-check-label"></label>
+            <label asp-for="RememberMe" class="form-check-label">Remember Me</label>
         </div>
-
-        <p class="mt-3">
-            <a asp-action="ForgotPassword">Forgot your password?</a>
-        </p>
-
+        <a asp-action="ForgotPassword">Forgot your password?</a><br />
         <button type="submit" class="btn btn-primary">Login</button>
+        
+        <div class="mt-3">
+            <a asp-action="Register">Don’t have an account? Register</a>
+        </div>
     </form>
 </div>
 
-<script>
-    function togglePassword(id, btn) {
-        const input = document.getElementById(id);
-        const icon = btn.querySelector("i");
-
-        if (input.type === "password") {
-            input.type = "text";
-            icon.classList.remove("fa-eye");
-            icon.classList.add("fa-eye-slash");
-        } else {
-            input.type = "password";
-            icon.classList.remove("fa-eye-slash");
-            icon.classList.add("fa-eye");
-        }
-    }
-</script>
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

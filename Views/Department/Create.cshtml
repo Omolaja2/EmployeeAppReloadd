@@ -1,43 +1,19 @@
-﻿@model Presentation.Models.CreateEmployeeViewModel
+﻿@model Presentation.Models.CreateDepartmentViewModel
 
-@{
-    ViewData["Title"] = "Create Employee";
-}
-
-<h1>Create New Employee</h1>
-
+<h2>Create Department</h2>
 <form asp-action="Create" method="post">
     <div class="form-group">
-        <label asp-for="FirstName"></label>
-        <input asp-for="FirstName" class="form-control" />
-        <span asp-validation-for="FirstName" class="text-danger"></span>
+        <label asp-for="Name"></label>
+        <input asp-for="Name" class="form-control" />
+        <span asp-validation-for="Name" class="text-danger"></span>
     </div>
+  <div class="form-group">
+    <label asp-for="Description"></label>
+    <textarea asp-for="Description" class="form-control" rows="5"></textarea>
+    <span asp-validation-for="Description" class="text-danger"></span>
+</div>
 
-    <div class="form-group">
-        <label asp-for="LastName"></label>
-        <input asp-for="LastName" class="form-control" />
-        <span asp-validation-for="LastName" class="text-danger"></span>
-    </div>
-
-    <div class="form-group">
-        <label asp-for="Email"></label>
-        <input asp-for="Email" class="form-control" />
-        <span asp-validation-for="Email" class="text-danger"></span>
-    </div>
-
-    <div class="form-group">
-        <label asp-for="HireDate"></label>
-        <input asp-for="HireDate" type="date" class="form-control" />
-        <span asp-validation-for="HireDate" class="text-danger"></span>
-    </div>
-
-    <div class="form-group">
-        <label asp-for="Salary"></label>
-        <input asp-for="Salary" class="form-control" />
-        <span asp-validation-for="Salary" class="text-danger"></span>
-    </div>
-
-<h1>
-    <button type="submit" class="btn btn-outline-primary btn-sm">Create</button>
-    </div>
+    <h1>
+    <button type="submit" class="btn btn-primary">Add Department</button>
+    </h1>
 </form>

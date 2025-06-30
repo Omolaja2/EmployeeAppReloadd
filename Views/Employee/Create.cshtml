@@ -4,49 +4,62 @@
     ViewData["Title"] = "Create Employee";
 }
 
-<h2>Create Employee</h2>
-<hr />
+<h2 class="mb-4">Create New Employee</h2>
 
-<form asp-action="Create" method="post">
-    <div class="form-group">
-        <label asp-for="FirstName"></label>
+@Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+
+<form asp-action="Create" method="post" enctype="multipart/form-data">
+    <div class="mb-3">
+        <label asp-for="FirstName" class="form-label"></label>
         <input asp-for="FirstName" class="form-control" />
-        <span asp-validation-for="FirstName" class="text-danger"></span>
+        <span asp-validation-for="FirstName" class="text-danger small"></span>
     </div>
 
-    <div class="form-group">
-        <label asp-for="LastName"></label>
+    <div class="mb-3">
+        <label asp-for="LastName" class="form-label"></label>
         <input asp-for="LastName" class="form-control" />
-        <span asp-validation-for="LastName" class="text-danger"></span>
+        <span asp-validation-for="LastName" class="text-danger small"></span>
     </div>
 
-    <div class="form-group">
-        <label asp-for="Email"></label>
+    <div class="mb-3">
+        <label asp-for="Email" class="form-label"></label>
         <input asp-for="Email" class="form-control" />
-        <span asp-validation-for="Email" class="text-danger"></span>
+        <span asp-validation-for="Email" class="text-danger small"></span>
     </div>
 
-     <div class="form-group">
-        <label asp-for="HireDate"></label>
-        <input asp-for="HireDate" type="date" class="form-control" />
-        <span asp-validation-for="HireDate" class="text-danger"></span>
+    <div class="mb-3">
+        <label asp-for="HireDate" class="form-label"></label>
+        <input asp-for="HireDate" class="form-control" type="date" />
+        <span asp-validation-for="HireDate" class="text-danger small"></span>
     </div>
 
-    <div class="form-group">
-        <label asp-for="Salary"></label>
+    <div class="mb-3">
+        <label asp-for="Salary" class="form-label"></label>
         <input asp-for="Salary" class="form-control" />
-        <span asp-validation-for="Salary" class="text-danger"></span>
+        <span asp-validation-for="Salary" class="text-danger small"></span>
     </div>
 
-    <div class="form-group">
-        <label asp-for="DepartmentId"></label>
-        <select asp-for="DepartmentId" asp-items="Model.Departments" class="form-control">
-            <option value="">Select Department</option>
+    <div class="mb-3">
+        <label asp-for="DepartmentId" class="form-label">Department</label>
+        <select asp-for="DepartmentId" asp-items="Model.Departments" class="form-select">
+            <option value="">-- Select Department --</option>
         </select>
-        <span asp-validation-for="DepartmentId" class="text-danger"></span>
+        <span asp-validation-for="DepartmentId" class="text-danger small"></span>
     </div>
 
-<h1>
-    <button type="submit" class="btn btn-outline-primary btn-sm">Create</button>
-    </h1>
+    <div class="mb-3">
+        <label class="form-label">Profile Image</label>
+        <input asp-for="ProfileImage" type="file" class="form-control" />
+    </div>
+
+    <button type="submit" class="btn btn-success">Create</button>
+    <a asp-action="Index" class="btn btn-secondary ms-2">Cancel</a>
 </form>
+
+
+
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

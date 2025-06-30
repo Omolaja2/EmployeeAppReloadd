@@ -34,10 +34,13 @@ namespace Presentation.Controllers
             return View(viewModel);
         }
 
+        [HttpGet]
         public IActionResult Create()
         {
-            return View();
+            var viewModel = new CreateDepartmentViewModel();
+            return View(viewModel);
         }
+
 
         [HttpPost]
         public async Task<IActionResult> Create(CreateDepartmentViewModel model)

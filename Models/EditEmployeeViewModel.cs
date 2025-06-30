@@ -25,6 +25,10 @@ namespace Presentation.Models
         [Required]
         public Guid DepartmentId { get; set; }
 
+        public string CurrentProfileImageUrl { get; set; } = default!;
+
+        public IFormFile? ProfileImage { get; set; }
+
         public List<SelectListItem>? Departments { get; set; }
     }
 }

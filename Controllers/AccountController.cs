@@ -56,6 +56,44 @@ namespace Presentation.Controllers
         }
 
 
+        [HttpGet]
+        public async Task<IActionResult> Profile()
+        {
+            var user = await _userManager.GetUserAsync(User);
+            if (user == null) return NotFound();
+
+            var model = new EditProfileViewModel
+            {
+                Email = user.Email
+            };
+
+            return View(model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Profile(EditProfileViewModel model)
+        {
+            if (!ModelState.IsValid) return View(model);
+
+            var user = await _userManager.GetUserAsync(User);
+            if (user == null) return NotFound();
+
+            user.Email = model.Email;
+            user.UserName = model.Email;
+
+            var result = await _userManager.UpdateAsync(user);
+            if (result.Succeeded)
+            {
+                SetFlashMessage("Profile updated successfully!", "success");
+                return RedirectToAction("Profile");
+            }
+
+            ModelState.AddModelError(string.Empty, "Failed to update profile");
+            return View(model);
+        }
+
+    
+
 
 
         [HttpGet]
@@ -110,7 +148,6 @@ namespace Presentation.Controllers
                 TempData["2fa_user"] = user.Email;
                 TempData["rememberMe"] = model.RememberMe;
 
-                // Send email
                 await _emailSender.SendEmailAsync(user.Email, "Your 2FA Code",
                     $"Your security code is: <strong>{randomcode}</strong>");
 
@@ -237,6 +274,4 @@ namespace Presentation.Controllers
             return RedirectToAction("Index", "Home");
         }
     }
-
-
 }

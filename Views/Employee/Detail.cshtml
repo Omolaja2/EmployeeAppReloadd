@@ -5,73 +5,97 @@
     ViewData["Title"] = "Employee Details";
 }
 
-<h1>Employee Details</h1>
+<h2 class="mb-4">Employee Details</h2>
 
-<table class="table table-bordered">
-    <tr><th>First Name</th><td>@Model.FirstName</td></tr>
-    <tr><th>Last Name</th><td>@Model.LastName</td></tr>
-    <tr><th>Email</th><td>@Model.Email</td></tr>
-    <tr><th>Department</th><td>@Model.Department?.Name</td></tr>
-    <tr><th>Hire Date</th><td>@Model.HireDate.ToString("yyyy-MM-dd")</td></tr>
-    <tr><th>Salary</th><td>$@Model.Salary</td></tr>
-    <tr>
-        <th>Addresses</th>
-        <td>
-            @if (Model.Addresses != null && Model.Addresses.Any())
-            {
-                <ul class="mb-0">
-                    @foreach (var address in Model.Addresses)
-                    {
-                        <li>
-                            @address.Street, @address.City, @address.State
-                            <form asp-action="DeleteAddress" method="post" class="d-inline ms-2">
-                                <input type="hidden" name="addressId" value="@address.Id" />
-                                <input type="hidden" name="employeeId" value="@Model.Id" />
-                                <button type="submit" class="btn btn-sm btn-danger">Delete</button>
-                            </form>
-                        </li>
-                    }
-                </ul>
-            }
-            else
-            {
-                <span class="text-muted">No addresses available.</span>
-            }
-        </td>
-    </tr>
-</table>
+<div class="card shadow-sm mb-4">
+    <div class="card-body">
+        <dl class="row">
+            <dt class="col-sm-3">First Name:</dt>
+            <dd class="col-sm-9">@Model.FirstName</dd>
 
-<hr />
+            <dt class="col-sm-3">Last Name:</dt>
+            <dd class="col-sm-9">@Model.LastName</dd>
+
+            <dt class="col-sm-3">Email:</dt>
+            <dd class="col-sm-9">@Model.Email</dd>
+
+            <dt class="col-sm-3">Department:</dt>
+            <dd class="col-sm-9">@Model.Department?.Name ?? "N/A"</dd>
+
+            <dt class="col-sm-3">Hire Date:</dt>
+            <dd class="col-sm-9">@Model.HireDate.ToString("yyyy-MM-dd")</dd>
+
+            <dt class="col-sm-3">Salary:</dt>
+            <dd class="col-sm-9">$@Model.Salary</dd>
+
+            <dt class="col-sm-3">Profile Image:</dt>
+            <dd class="col-sm-9">
+                @if (!string.IsNullOrEmpty(Model.ProfileImageUrl))
+                {
+                    <img src="@Model.ProfileImageUrl" alt="Profile Image" class="img-thumbnail" style="max-width:150px;" />
+                }
+                else
+                {
+                    <span class="text-muted">No profile image uploaded.</span>
+                }
+            </dd>
+        </dl>
+    </div>
+</div>
+
+<h4>Addresses</h4>
+
+@if (Model.Addresses != null && Model.Addresses.Any())
+{
+    <ul class="list-group mb-3">
+        @foreach (var address in Model.Addresses)
+        {
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+                @address.Street, @address.City, @address.State
+                <form asp-action="DeleteAddress"
+                      method="post"
+                      asp-route-addressId="@address.Id"
+                      asp-route-employeeId="@Model.Id"
+                      class="d-inline"
+                      onsubmit="return confirm('Are you sure you want to delete this address?');">
+                    <button type="submit" class="btn btn-sm btn-danger">Delete</button>
+                </form>
+            </li>
+        }
+    </ul>
+}
+else
+{
+    <div class="alert alert-info">No addresses available for this employee.</div>
+}
 
 <!-- Add Address Button -->
-<button id="toggleAddressForm" class="btn btn-outline-success mb-3">Add Address</button>
+<button id="toggleAddressForm" class="btn btn-success mb-3">Add New Address</button>
 
 <!-- Hidden Add Address Form -->
-<div id="addressFormContainer" style="display: none;">
-    <h4>Add New Address</h4>
+<div id="addressFormContainer" class="card p-3 mb-4" style="display: none;">
     <form asp-action="AddAddress" method="post">
-        <input type="hidden" name="employeeId" value="@Model.Id" />
+        <input type="hidden" name="EmployeeId" value="@Model.Id" />
 
-        <div class="row mb-3">
-            <div class="col-md-6">
-                <label class="form-label">Street</label>
-                <input name="Street" class="form-control" required />
-            </div>
-            <div class="col-md-3">
-                <label class="form-label">City</label>
-                <input name="City" class="form-control" required />
-            </div>
-            <div class="col-md-3">
-                <label class="form-label">State</label>
-                <input name="State" class="form-control" />
-            </div>
+        <div class="mb-3">
+            <label class="form-label">Street</label>
+            <input name="Street" class="form-control" required />
         </div>
 
-        <button type="submit" class="btn btn-success">Add Address</button>
+        <div class="mb-3">
+            <label class="form-label">City</label>
+            <input name="City" class="form-control" required />
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">State</label>
+            <input name="State" class="form-control" required />
+        </div>
+
+        <button type="submit" class="btn btn-primary">Save Address</button>
     </form>
 </div>
 
-<hr />
 <a asp-action="Index" class="btn btn-outline-primary">Back to Employee List</a>
 
 @section Scripts {
