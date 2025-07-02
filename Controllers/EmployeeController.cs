@@ -5,11 +5,13 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Presentation.Models;
 using Application.Services.UploadImage;
+using Microsoft.AspNetCore.Identity;
 
 namespace Presentation.Controllers
 {
     public class EmployeeController : Controller
     {
+        // private readonly SignInManager<IdentityUser> _signInManager;
         private readonly EmployeeAppDbContext _context;
         private readonly ICloudinaryService _cloudinaryService;
 
@@ -17,6 +19,7 @@ namespace Presentation.Controllers
         {
             _context = context;
             _cloudinaryService = cloudinaryService;
+            // _signInManager = signInManager;
         }
 
         private async Task<List<SelectListItem>> GetDepartmentsAsync()
@@ -126,7 +129,6 @@ namespace Presentation.Controllers
 
             return RedirectToAction(nameof(Index));
         }
-
         [HttpGet]
         public async Task<IActionResult> Detail(Guid id)
         {
@@ -137,9 +139,16 @@ namespace Presentation.Controllers
 
             if (employee == null)
                 return NotFound();
+            ViewBag.States = await _context.States
+                .Select(s => new SelectListItem
+                {
+                    Value = s.Id.ToString(),
+                    Text = s.Name
+                }).ToListAsync();
 
             return View(employee);
         }
+
 
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -185,7 +194,8 @@ namespace Presentation.Controllers
             return View(model);
         }
 
-        
+
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(EditEmployeeViewModel model)
@@ -240,10 +250,76 @@ namespace Presentation.Controllers
             }
 
             await _context.SaveChangesAsync();
-
+            TempData["Success"] = "Employee updated successfully!";
             return RedirectToAction(nameof(Index));
         }
 
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteProfileImage(Guid id)
+        {
+            var employee = await _context.Employees.FindAsync(id);
+            if (employee == null)
+                return NotFound();
+
+            if (!string.IsNullOrEmpty(employee.ProfileImagePublicId))
+            {
+                await _cloudinaryService.DeleteImageAsync(employee.ProfileImagePublicId);
+            }
+
+            employee.ProfileImageUrl = null;
+            employee.ProfileImagePublicId = null;
+
+            await _context.SaveChangesAsync();
+
+            TempData["Success"] = "Profile image deleted successfully.";
+
+            return RedirectToAction(nameof(Detail), new { id = employee.Id });
+        }
+
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> AddAddress(Guid EmployeeId, string Street, string City, Guid StateId, string ZipCode)
+        {
+            var employee = await _context.Employees.FindAsync(EmployeeId);
+            if (employee == null)
+                return NotFound();
+
+            var address = new Adress
+            {
+                EmployeeId = EmployeeId,
+                Street = Street,
+                City = City,
+                StateId = StateId,
+                ZipCode = ZipCode
+            };
+
+            _context.Addresses.Add(address);
+            await _context.SaveChangesAsync();
+
+            TempData["Success"] = "Address added successfully.";
+            return RedirectToAction(nameof(Detail), new { id = EmployeeId });
+        }
+
+
+        [HttpPost]
+
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteAddress(Guid addressId, Guid employeeId)
+        {
+            var address = await _context.Addresses.FindAsync(addressId);
+
+            if (address == null)
+                return NotFound();
+
+            _context.Addresses.Remove(address);
+            await _context.SaveChangesAsync();
+
+            TempData["Success"] = "Address deleted successfully.";
+            return RedirectToAction(nameof(Detail), new { id = employeeId });
+
+        }
 
 
     }

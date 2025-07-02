@@ -92,7 +92,7 @@ namespace Presentation.Controllers
             return View(model);
         }
 
-    
+
 
 
 
@@ -209,7 +209,7 @@ namespace Presentation.Controllers
         // {
         //     return View(); 
         // }
-        
+
 
         [HttpPost]
         public async Task<IActionResult> ForgotPassword(ForgotPasswordViewModel model)
@@ -232,14 +232,14 @@ namespace Presentation.Controllers
             return RedirectToAction("Login");
         }
 
-        
+
         [HttpGet]
         public IActionResult ResetPassword(string token, string email)
         {
             return View(new ResetPasswordViewModel { Token = token, Email = email });
         }
-  
-    
+
+
         [HttpPost]
         public async Task<IActionResult> ResetPassword(ResetPasswordViewModel model)
         {
@@ -266,12 +266,14 @@ namespace Presentation.Controllers
             return View(model);
         }
 
-        // Logout
-        [HttpGet]
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Logout()
         {
             await _signInManager.SignOutAsync();
-            return RedirectToAction("Index", "Home");
+            return RedirectToAction("Login", "Account");
         }
+
     }
 }
