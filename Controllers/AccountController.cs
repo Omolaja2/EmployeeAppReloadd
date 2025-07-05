@@ -143,7 +143,6 @@ namespace Presentation.Controllers
 
                 var randomcode = new Random().Next(100000, 999999).ToString();
 
-
                 TempData["2fa_code"] = randomcode;
                 TempData["2fa_user"] = user.Email;
                 TempData["rememberMe"] = model.RememberMe;
@@ -180,7 +179,6 @@ namespace Presentation.Controllers
 
             if (string.IsNullOrEmpty(expectedCode) || string.IsNullOrEmpty(email))
             {
-
                 SetFlashMessage("Session expired. Please log in again.", "error");
                 return RedirectToAction("Login");
             }

@@ -11,7 +11,7 @@ namespace Presentation.Controllers
 {
     public class EmployeeController : Controller
     {
-        // private readonly SignInManager<IdentityUser> _signInManager;
+      
         private readonly EmployeeAppDbContext _context;
         private readonly ICloudinaryService _cloudinaryService;
 

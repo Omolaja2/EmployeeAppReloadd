@@ -15,6 +15,6 @@ public class ResetPasswordViewModel
         public string NewPassword { get; set; } = default!;
 
         [Required]
-        [Compare("NewPassword", ErrorMessage = "Passwords do not match.")]
+        [Compare("NewPassword", ErrorMessage = "Passwords do not match!.")]
         public string ConfirmPassword { get; set; } = default!;
 }

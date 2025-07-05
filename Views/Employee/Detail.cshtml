@@ -29,7 +29,7 @@
             <dd class="col-sm-9">@Model.Email</dd>
 
             <dt class="col-sm-3">Department:</dt>
-            <dd class="col-sm-9">@Model.Department?.Name ?? "N/A"</dd>
+            <dd class="col-sm-9">@Model.Department.Name</dd>
 
             <dt class="col-sm-3">Hire Date:</dt>
             <dd class="col-sm-9">@Model.HireDate.ToString("yyyy-MM-dd")</dd>
@@ -108,7 +108,7 @@ else
         <div class="mb-3">
             <label class="form-label">State</label>
             <select name="StateId" class="form-select" required>
-                <option value="">-- Select State --</option>
+                <option value="">Select State</option>
                 @foreach (var state in ViewBag.States as List<SelectListItem>)
                 {
                     <option value="@state.Value">@state.Text</option>
