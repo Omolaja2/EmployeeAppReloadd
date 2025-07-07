@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "ICvGVRQUJ4I=",
+  "dgSpecHash": "lp4sGokvFV4=",
   "success": true,
   "projectFilePath": "C:\\Users\\USER\\Desktop\\EmployeeAppReloaded\\Presentation\\Presentation.csproj",
   "expectedPackageFiles": [
@@ -125,15 +125,5 @@
     "C:\\Users\\USER\\.nuget\\packages\\system.windows.extensions\\8.0.0\\system.windows.extensions.8.0.0.nupkg.sha512",
     "C:\\Users\\USER\\.nuget\\packages\\zstdsharp.port\\0.8.5\\zstdsharp.port.0.8.5.nupkg.sha512"
   ],
-  "logs": [
-    {
-      "code": "NU1900",
-      "level": "Warning",
-      "message": "Error occurred while getting package vulnerability data: No such host is known. (api.nuget.org:443)",
-      "projectPath": "C:\\Users\\USER\\Desktop\\EmployeeAppReloaded\\Presentation\\Presentation.csproj",
-      "warningLevel": 1,
-      "filePath": "C:\\Users\\USER\\Desktop\\EmployeeAppReloaded\\Presentation\\Presentation.csproj",
-      "targetGraphs": []
-    }
-  ]
+  "logs": []
 }

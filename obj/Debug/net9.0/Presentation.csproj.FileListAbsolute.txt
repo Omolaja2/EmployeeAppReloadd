@@ -135,6 +135,7 @@ C:\Users\USER\Desktop\EmployeeAppReloaded\Presentation\bin\Debug\net9.0\Data.dll
 C:\Users\USER\Desktop\EmployeeAppReloaded\Presentation\bin\Debug\net9.0\Application.pdb
 C:\Users\USER\Desktop\EmployeeAppReloaded\Presentation\bin\Debug\net9.0\Data.pdb
 C:\Users\USER\Desktop\EmployeeAppReloaded\Presentation\obj\Debug\net9.0\Presentation.csproj.AssemblyReference.cache
+C:\Users\USER\Desktop\EmployeeAppReloaded\Presentation\obj\Debug\net9.0\rpswa.dswa.cache.json
 C:\Users\USER\Desktop\EmployeeAppReloaded\Presentation\obj\Debug\net9.0\Presentation.GeneratedMSBuildEditorConfig.editorconfig
 C:\Users\USER\Desktop\EmployeeAppReloaded\Presentation\obj\Debug\net9.0\Presentation.AssemblyInfoInputs.cache
 C:\Users\USER\Desktop\EmployeeAppReloaded\Presentation\obj\Debug\net9.0\Presentation.AssemblyInfo.cs
@@ -144,6 +145,9 @@ C:\Users\USER\Desktop\EmployeeAppReloaded\Presentation\obj\Debug\net9.0\Presenta
 C:\Users\USER\Desktop\EmployeeAppReloaded\Presentation\obj\Debug\net9.0\Presentation.RazorAssemblyInfo.cache
 C:\Users\USER\Desktop\EmployeeAppReloaded\Presentation\obj\Debug\net9.0\Presentation.RazorAssemblyInfo.cs
 C:\Users\USER\Desktop\EmployeeAppReloaded\Presentation\obj\Debug\net9.0\Presentation.sourcelink.json
+C:\Users\USER\Desktop\EmployeeAppReloaded\Presentation\obj\Debug\net9.0\rjimswa.dswa.cache.json
+C:\Users\USER\Desktop\EmployeeAppReloaded\Presentation\obj\Debug\net9.0\rjsmrazor.dswa.cache.json
+C:\Users\USER\Desktop\EmployeeAppReloaded\Presentation\obj\Debug\net9.0\rjsmcshtml.dswa.cache.json
 C:\Users\USER\Desktop\EmployeeAppReloaded\Presentation\obj\Debug\net9.0\scopedcss\Views\Shared\_Layout.cshtml.rz.scp.css
 C:\Users\USER\Desktop\EmployeeAppReloaded\Presentation\obj\Debug\net9.0\scopedcss\bundle\Presentation.styles.css
 C:\Users\USER\Desktop\EmployeeAppReloaded\Presentation\obj\Debug\net9.0\scopedcss\projectbundle\Presentation.bundle.scp.css
